@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: employee-app
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: employee-app
+
+  template:
+
+    metadata:
+      labels:
+        app: employee-app
+
+    spec:
+      containers:
+
+      - name: employee-container
+
+        image: dhevaemployeeacr.azurecr.io/employee-app:v1
+
+        ports:
+        - containerPort: 5000
