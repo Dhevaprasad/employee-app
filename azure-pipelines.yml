@@ -1,0 +1,33 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  imageName: employee-app
+  tag: $(Build.BuildId)
+
+steps:
+
+- checkout: self
+
+- script: |
+    python3 -m pip install -r requirements.txt
+
+- script: |
+    pytest
+
+- script: |
+    docker build -t $(imageName):$(tag) .
+
+- script: |
+    docker login myacr.azurecr.io \
+      -u $(ACR_USERNAME) \
+      -p $(ACR_PASSWORD)
+
+- script: |
+    docker tag $(imageName):$(tag) myacr.azurecr.io/$(imageName):$(tag)
+
+- script: |
+    docker push myacr.azurecr.io/$(imageName):$(tag)
