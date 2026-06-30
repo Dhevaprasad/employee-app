@@ -9,22 +9,12 @@ variables:
   tag: $(Build.BuildId)
 
 steps:
-
 - checkout: self
 
 - script: |
     python3 -m pip install -r requirements.txt
+  displayName: Install Dependencies
 
 - script: |
     docker build -t $(imageName):$(tag) .
-
-- script: |
-    docker login myacr.azurecr.io \
-      -u $(ACR_USERNAME) \
-      -p $(ACR_PASSWORD)
-
-- script: |
-    docker tag $(imageName):$(tag) myacr.azurecr.io/$(imageName):$(tag)
-
-- script: |
-    docker push myacr.azurecr.io/$(imageName):$(tag)
+  displayName: Build Docker Image
