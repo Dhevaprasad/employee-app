@@ -12,17 +12,14 @@ spec:
       app: employee-app
 
   template:
-
     metadata:
       labels:
         app: employee-app
 
     spec:
       containers:
-
       - name: employee-container
-
-        image: dhevaemployeeacr.azurecr.io/employee-app:v1
-
+        image: employee-app:v1
+        imagePullPolicy: Never
         ports:
         - containerPort: 5000
