@@ -1,25 +1,38 @@
-apiVersion: apps/v1
-kind: Deployment
+trigger:
+- main
 
-metadata:
-  name: employee-app
+pool:
+  vmImage: ubuntu-latest
 
-spec:
-  replicas: 3
+variables:
+  imageName: employee-app
+  tag: $(Build.BuildId)
 
-  selector:
-    matchLabels:
-      app: employee-app
+steps:
 
-  template:
-    metadata:
-      labels:
-        app: employee-app
+- checkout: self
 
-    spec:
-      containers:
-      - name: employee-container
-        image: dhevaemployeeacr.azurecr.io/employee-app:latest
-        imagePullPolicy: Always
-        ports:
-        - containerPort: 5000
+- script: |
+    python3 -m pip install -r requirements.txt
+  displayName: Install Dependencies
+
+- task: Docker@2
+  displayName: Build and Push Image
+  inputs:
+    command: buildAndPush
+    containerRegistry: 'ACR-Docker'
+    repository: 'employee-app'
+    dockerfile: 'Dockerfile'
+    tags: |
+      $(tag)
+      latest
+
+- task: KubernetesManifest@1
+  displayName: Deploy to AKS
+  inputs:
+    action: deploy
+    kubernetesServiceConnection: 'AKS Service Connection'
+    namespace: default
+    manifests: |
+      k8s/deployment.yaml
+      k8s/service.yaml
