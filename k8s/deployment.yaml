@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: employee-container
-        image: employee-app:v1
-        imagePullPolicy: Never
+        image: dhevaemployeeacr.azurecr.io/employee-app:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
