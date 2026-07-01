@@ -7,7 +7,6 @@ pool:
 variables:
   imageName: employee-app
   tag: $(Build.BuildId)
-  acrLoginServer: dhevaemployeeacr.azurecr.io
 
 steps:
 - checkout: self
@@ -24,7 +23,7 @@ steps:
   displayName: Build and Push Image
   inputs:
     command: buildAndPush
-    containerRegistry: 'ACR'
+    containerRegistry: 'ACR-Docker'
     repository: 'employee-app'
     dockerfile: 'Dockerfile'
     tags: |
