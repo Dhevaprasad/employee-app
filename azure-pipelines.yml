@@ -1,3 +1,9 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
 steps:
 - checkout: self
 
@@ -11,7 +17,6 @@ steps:
     command: buildAndPush
     containerRegistry: 'ACR-Docker'
     repository: 'employee-app'
-    dockerfile: 'Dockerfile'
+    Dockerfile: 'Dockerfile'
     tags: |
-      $(tag)
       latest
