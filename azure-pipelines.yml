@@ -7,6 +7,7 @@ pool:
 variables:
   imageName: employee-app
   tag: $(Build.BuildId)
+  acrLoginServer: dhevaemployeeacr.azurecr.io
 
 steps:
 - checkout: self
@@ -16,5 +17,16 @@ steps:
   displayName: Install Dependencies
 
 - script: |
-    docker build -t $(imageName):$(tag) .
-  displayName: Build Docker Image
+    pytest
+  displayName: Run Tests
+
+- task: Docker@2
+  displayName: Build and Push Image
+  inputs:
+    command: buildAndPush
+    containerRegistry: 'ACR'
+    repository: 'employee-app'
+    dockerfile: 'Dockerfile'
+    tags: |
+      $(tag)
+      latest
